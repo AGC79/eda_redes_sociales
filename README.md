@@ -38,15 +38,15 @@ La temática del dataset permite explorar patrones y relaciones entre los hábit
 | `Affects_Academic_Performance` | Impacto percibido en el rendimiento académico (Sí/No) |
 | `Sleep_Hours_Per_Night` | Horas de sueño por noche |
 | `Mental_Health_Score` | Puntaje de salud mental (1-10) |
-| `Relationship_Status` | Estado de relación |
+| `Relationship_Status` | Estado de relación sentimental |
 | `Conflicts_Over_Social_Media` | Número de conflictos relacionados con redes sociales |
 | `Addicted_Score` | Puntaje de adicción a redes sociales (1-10) |
 
 ---
 
 ## Tecnologías y herramientas
-- Python (pandas, matplotlib, seaborn) o R para análisis exploratorio.  
-- Jupyter Notebook o RStudio para documentación interactiva del análisis.  
+- Python (pandas, matplotlib, seaborn) para análisis exploratorio.  
+- Jupyter Notebook para documentación interactiva del análisis.  
 - GitHub para control de versiones y documentación del proyecto.
 
 ---
