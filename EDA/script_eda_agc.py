@@ -8,24 +8,37 @@ import warnings # importa todos los warnings de versión y os ignora
 
 warnings.filterwarnings("ignore")
 
+
+# Crea una carpeta para almacenenar los gráficos descargados
 os.makedirs("eda_graficos_agc", exist_ok=True)
 
+# Lee el dataset y crea un dataframe
 social_media = pd.read_csv("Students_Social_Media_Addiction.csv", sep=",")
-social_media.head()
 
-# INTRODUCCIÓN: USO DE REDES SOCIALES POR GÉNERO
+
+###################################### INTRODUCCIÓN: ###############################
+#                                                                                  #
+#  GRÁFICO DE TARTA QUE MUESTRA EL PORCENTAJE DE USO DE REDES SOCIALES POR GÉNERO  #
+#                                                                                  #
+#################################################################################### 
+
+## PREPARACIÓN DE DATOS
+
+valores = social_media.groupby("Gender")["Avg_Daily_Usage_Hours"].mean()
+
+# CÓDIGO DEL GRÁFICO
 
 plt.figure()
 
 plt.style.use('classic')
 
-valores = social_media.groupby("Gender")["Avg_Daily_Usage_Hours"].mean()
-
 valores.index = valores.index.map({
     "Male": "Hombres",
     "Female": "Mujeres"
 })
+
 plt.pie(valores, labels=valores.index, autopct='%1.1f%%', colors = ["#1F77B4", "#FF7F0E"])
+
 plt.title("Uso de redes sociales por género")
 
 plt.savefig(".\\eda_graficos_agc\\grafico_intro.png", dpi=300, bbox_inches='tight') 
@@ -33,15 +46,23 @@ plt.savefig(".\\eda_graficos_agc\\grafico_intro.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 1 - GRÁFICO 1
+############################ HIPÓTESIS 1 - GRÁFICO 1 ###############################
+#                                                                                  #
+#     GRÁFICO DE BARRAS CON EL PROMEDIO DE HORAS DE USO DE REDES SOCIALES SEGUN    #
+#     PERCEPCION DE AFECTACIÓN EN RENDIMIENTO ACADÉMICO                            #
+#                                                                                  #
+#################################################################################### 
 
 df_media_horas = round(social_media.groupby("Affects_Academic_Performance")["Avg_Daily_Usage_Hours"].mean().reset_index(), 1)
 
 plt.figure(figsize=(6,6))
+
 plt.bar(df_media_horas['Affects_Academic_Performance'], df_media_horas['Avg_Daily_Usage_Hours'], color=['skyblue', 'salmon'] )
+
 plt.title("Promedio de horas diarias según percepción de afectación académica", pad=30, fontsize=16)
 plt.xlabel("Autopercepción de afectación", labelpad=20, fontsize=14)
 plt.ylabel("Horas promedio", labelpad=20, fontsize=14)
+
 plt.subplots_adjust(left=0.15, right=0.95, top=0.9, bottom=0.15)
 
 plt.xticks([0, 1], ["No", "Sí"])
@@ -58,7 +79,12 @@ plt.savefig(".\\eda_graficos_agc\\grafico_H1_01.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 1 - GRÁFICO 2
+############################ HIPÓTESIS 1 - GRÁFICO 2 ###############################
+#                                                                                  #
+#     GRÁFICO DE DISPERSIÓN CON EL PROMEDIO DE HORAS DE USO DE REDES SOCIALES      # 
+#     SEGUN PERCEPCION DE AFECTACIÓN EN RENDIMIENTO ACADÉMICO Y GÉNERO             #                               #
+#                                                                                  #
+#################################################################################### 
 
 ## PREPARACIÓN DE DATOS
 
@@ -143,7 +169,12 @@ plt.savefig(".\\eda_graficos_agc\\grafico_H1_02.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 1 - GRÁFICO 3
+############################ HIPÓTESIS 1 - GRÁFICO 3 ###############################
+#                                                                                  #
+#     GRÁFICO DE BARRAS CON EL PROMEDIO DE HORAS DE USO DE REDES SOCIALES SEGUN    #
+#     PERCEPCION DE AFECTACIÓN EN RENDIMIENTO ACADÉMICO Y NIVEL ACADÉMICO          #                               #
+#                                                                                  #
+#################################################################################### 
 
 ## PREPARACIÓN DE DATOS
 
@@ -188,7 +219,12 @@ plt.savefig(".\\eda_graficos_agc\\grafico_H1_03.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 2 - GRÁFICO 1
+############################ HIPÓTESIS 2 - GRÁFICO 1 ###############################
+#                                                                                  #
+#     GRÁFICO DE BARRAS CON LAS PLATAFORMAS DE REDES SOCIALES MÁS USADAS           #
+#     ORDENADAS DE FORMA DESCENDENTE                                               #
+#                                                                                  #
+#################################################################################### 
 
 ## PREPARACIÓN DE DATOS
 
@@ -220,6 +256,7 @@ plt.xlabel("Red Social", labelpad=20, fontsize=14)
 plt.ylabel("Nº de estudiantes", labelpad=20, fontsize=14)
 
 plt.xticks(rotation=45)
+
 plt.ylim(0, 260)
 plt.margins(x=0.03)
 plt.tight_layout()
@@ -228,19 +265,25 @@ plt.savefig(".\\eda_graficos_agc\\grafico_H2_01.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 2 - GRÁFICO 2
+############################ HIPÓTESIS 2 - GRÁFICO 2 ###############################
+#                                                                                  #
+#      GRÁFICO DE BARRAS CON LA MEDIA DE ADiCCIÓN SEGÚN LA RED SOCIAL USADA        #
+#                                                                                  #
+#################################################################################### 
 
 ## PREPARACIÓN DE DATOS
 
 redes_sociales = social_media["Most_Used_Platform"].value_counts()
 orden = redes_sociales.index
 
+y_promedio = social_media["Addicted_Score"].mean()
+
 # GRÁFICO
 
 plt.figure(figsize=(12,6))
+
 sns.barplot(data=social_media, x="Most_Used_Platform", y="Addicted_Score", order=orden, palette=palette_plataformas, ci=None)
 
-y_promedio = social_media["Addicted_Score"].mean()
 plt.axhline(y=y_promedio, color="red", linestyle="--", linewidth=2, label=f"Promedio general: {y_promedio:.2f}")
 
 plt.title("Promedio de adicción por plataforma", pad=20, fontsize=18)
@@ -259,7 +302,11 @@ plt.savefig(".\\eda_graficos_agc\\grafico_H2_02.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 3 - GRÁFICO 1
+############################ HIPÓTESIS 3 - GRÁFICO 1 ###############################
+#                                                                                  #
+#        GRÁFICO DE CORRELACIÓN ENTRE LAS VARIABLES NUMÉRICAS DEL DATAFRAME        #
+#                                                                                  #
+#################################################################################### 
 
 plt.figure(figsize=(13,7))
 
@@ -276,7 +323,12 @@ plt.savefig(".\\eda_graficos_agc\\grafico_H3_01.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 3 - GRÁFICO 2
+############################ HIPÓTESIS 3 - GRÁFICO 2 ###############################
+#                                                                                  #
+#      GRÁFICO DE DISPERSIÓN QUE RELACIONA EL NÚMERO DE HORAS DE USO DE REDES      #
+#      SOCIALES CON EL NIVEL DE SALUD MENTAL Y LAS HORAS DE SUEÑO                  #
+#                                                                                  #
+#################################################################################### 
 
 ## PREPARACIÓN DE DATOS
 
@@ -315,7 +367,12 @@ plt.savefig(".\\eda_graficos_agc\\grafico_H3_02.png", dpi=300, bbox_inches='tigh
 # plt.show();
 
 
-# HIPÓTESIS 4 - GRÁFICO 1
+############################ HIPÓTESIS 4 - GRÁFICO 1 ###############################
+#                                                                                  #
+#      GRÁFICO DE BARRAS QUE RELACIONA EL NÚMERO DE HORAS DE USO DE REDES          #
+#      SOCIALES CON EL NIVEL DE ADICCIÓN SEGÚN ESTADO SENTIMENTLA                  #
+#                                                                                  #
+#################################################################################### 
 
 ## PREPARACIÓN DE DATOS
 
@@ -345,28 +402,22 @@ df_melted['Variable'] = df_melted['Variable'].replace({
 
 # GRÁFICO
 
-fig = px.bar(
-    df_melted,
-    x='Relationship_Status',
-    y='Valor',
-    color='Variable',
-    barmode='group',
-    title='Relación entre horas de uso y adicción según estado sentimental',
-    text=None,
-    color_discrete_sequence=['#1f77b4', '#ff7f0e'],
-    labels={
-        'Relationship_Status': 'Estado sentimental',
-        'Valor': 'Promedio',
-        'Variable': 'Indicador'
-    }
-)
+fig = px.bar(df_melted,
+             x='Relationship_Status',
+             y='Valor',
+             color='Variable',
+             barmode='group',
+             title='Relación entre horas de uso y adicción según estado sentimental',
+             text=None,
+             color_discrete_sequence=['#1f77b4', '#ff7f0e'],
+             labels={'Relationship_Status': 'Estado sentimental',
+                     'Valor': 'Promedio',
+                     'Variable': 'Indicador'})
 
-fig.update_layout(
-    template='plotly_white',
-    xaxis_title='Estado sentimental',
-    yaxis_title='Escala de promedios',
-    legend_title='Indicador'
-)
+fig.update_layout(template='plotly_white',
+                  xaxis_title='Estado sentimental',
+                  yaxis_title='Escala de promedios',
+                  legend_title='Indicador')
 
 fig.write_image(".\\eda_graficos_agc\\grafico_H4_01.png")
 # fig.show()
