@@ -417,7 +417,8 @@ fig = px.bar(df_melted,
 fig.update_layout(template='plotly_white',
                   xaxis_title='Estado sentimental',
                   yaxis_title='Escala de promedios',
-                  legend_title='Indicador')
+                  legend_title='Indicador',
+                  yaxis=dict(range=[0, 10]))
 
 fig.write_image(".\\eda_graficos_agc\\grafico_H4_01.png")
 # fig.show()
